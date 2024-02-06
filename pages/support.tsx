@@ -8,13 +8,16 @@ import {
 } from "@chakra-ui/react";
 import { ChakraNextImage } from "components/Image";
 import { AppLayout } from "components/app-layouts/app";
+import { ContactSupportDynamic } from "components/help/contact-support-dynamic";
 import { ContactSupportModal } from "components/help/contact-support-modal";
 import { NeedSomeHelp } from "components/help/need-some-help";
 import { NextSeo } from "next-seo";
 import { PageId } from "page-id";
 import { FiArrowRight } from "react-icons/fi";
-import { Card, Heading, Link, LinkButton, Text } from "tw-components";
+import { Button, Card, Heading, Link, LinkButton, Text } from "tw-components";
 import { ThirdwebNextPage } from "utils/types";
+import { MutableRefObject, useRef } from "react";
+
 
 const helpProducts = [
   {
@@ -130,6 +133,15 @@ const helpProducts = [
 const SuppportPage: ThirdwebNextPage = () => {
   const title = "Support Page";
   const description = "thirdweb support page.";
+  const ticketRef = useRef() as MutableRefObject<HTMLDivElement>
+
+
+  const scrollToTicket = () => {
+    ticketRef.current.scrollIntoView({
+      behavior: "smooth",
+      block: "start"
+    })
+  }
 
   return (
     <>
@@ -287,7 +299,16 @@ const SuppportPage: ThirdwebNextPage = () => {
                   We are here to help. Ask product questions, report problems,
                   or leave feedback.
                 </Text>
-                <ContactSupportModal />
+                <Box
+                  position={{ base: "fixed", md: "relative" }}
+                  bottom={{ base: 4, md: "auto" }}
+                  right={{ base: 4, md: "auto" }}
+                  zIndex={{ base: "popover", md: "auto" }}
+                >
+                  <Button onClick={scrollToTicket} colorScheme="primary">
+                    Submit a ticket
+                  </Button>
+                </Box>
               </Flex>
               <Flex flexDir="column" gap={6}>
                 <Flex flexDir="column" gap={2}>
@@ -340,11 +361,13 @@ const SuppportPage: ThirdwebNextPage = () => {
                   md: "none",
                 }}
               >
-                <ContactSupportModal />
               </Flex>
             </Flex>
           </GridItem>
         </SimpleGrid>
+        <Box ref={ticketRef}>
+          <ContactSupportDynamic />
+        </Box>
       </Container>
     </>
   );
